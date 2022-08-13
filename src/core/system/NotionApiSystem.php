@@ -12,7 +12,7 @@ class NotionApiSystem extends ApiSystem
     /**
      * @var string
      */
-    private string $databaseId = '';
+    protected string $databaseId = '';
 
     /**
      * @return string

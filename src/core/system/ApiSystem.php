@@ -3,7 +3,7 @@
 namespace core\system;
 
 use core\exception\AppException;
-use domain\core\Task;
+use core\domain\Task;
 
 /**
  *

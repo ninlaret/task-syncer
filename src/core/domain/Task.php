@@ -1,6 +1,6 @@
 <?php
 
-namespace domain\core;
+namespace core\domain;
 
 use core\exception\AppException;
 
