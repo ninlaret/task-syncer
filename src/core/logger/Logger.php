@@ -2,15 +2,17 @@
 
 namespace core\logger;
 
+use core\App;
+
 /**
  *
  */
 abstract class Logger
 {
     /**
-     * @var $this
+     * @var self
      */
-    protected static self $instance;
+    protected static Logger $instance;
     /**
      * @var bool
      */
