@@ -38,13 +38,13 @@ class App
     public static function init($config, $mode): void
     {
         self::$config = self::makeConfig($config);
-        self::$logger = self::getLogger($config['logger']);
+        self::$logger = self::getLogger(self::$config['logger']);
 
         self::$logger->log('Initializing...');
 
         try {
             self::$db = self::setDb();
-            self::$assembler = new SystemAssembler($config['apiRealisations']);
+            self::$assembler = new SystemAssembler(self::$config['apiRealisations']);
             SystemService::init($config['syncParams']['target']);
 
         } catch (AppException $exception) {
