@@ -1,0 +1,7 @@
+{
+    "name": "ninlaret/task-syncer",
+    "description": "A tiny framework to sync your tasks between task systems",
+    "require": {
+        "php": ">=8.0"
+    }
+}
