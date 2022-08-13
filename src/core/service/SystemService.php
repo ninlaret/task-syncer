@@ -11,7 +11,7 @@ use core\App;
 class SystemService
 {
     /**
-     * @var $this
+     * @var SystemService
      */
     private static self $instance;
     /**

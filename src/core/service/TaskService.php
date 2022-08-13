@@ -2,9 +2,10 @@
 
 namespace core\service;
 
+use core\exception\AppException;
+use core\mapper\TaskMapper;
 use core\system\ApiSystem;
-use core\Task;
-use core\TaskMapper;
+use domain\core\Task;
 
 /**
  *
@@ -12,7 +13,7 @@ use core\TaskMapper;
 class TaskService
 {
     /**
-     * @var $this
+     * @var self
      */
     private static self $instance;
     /**
@@ -50,7 +51,7 @@ class TaskService
 
     /**
      * @return array
-     * @throws \core\exception\AppException
+     * @throws AppException
      */
     public function getAllTasksFromSources(): array
     {
@@ -68,7 +69,7 @@ class TaskService
      * @param Task $parentTask
      * @param ApiSystem $system
      * @return void
-     * @throws \core\exception\AppException
+     * @throws AppException
      */
     public function syncWithSystem(Task $parentTask, ApiSystem $system): void
     {
@@ -98,7 +99,7 @@ class TaskService
     /**
      * @param Task $task
      * @return void
-     * @throws \core\exception\AppException
+     * @throws AppException
      */
     public function syncWithTargets(Task $task): void
     {

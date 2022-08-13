@@ -1,7 +1,9 @@
 <?php
 
-namespace core;
+namespace core\mapper;
 
+use core\App;
+use domain\core\Task;
 use PDO;
 use PDOStatement;
 
@@ -13,23 +15,23 @@ class TaskMapper
     /**
      * @var PDOStatement|false
      */
-    private PDOStatement $selectStmt;
+    private PDOStatement|bool $selectStmt;
     /**
      * @var PDOStatement|false
      */
-    private PDOStatement $selectConnectedStmt;
+    private PDOStatement|bool $selectConnectedStmt;
     /**
      * @var PDOStatement|false
      */
-    private PDOStatement $selectParentStmt;
+    private PDOStatement|bool $selectParentStmt;
     /**
      * @var PDOStatement|false
      */
-    private PDOStatement $updateStmt;
+    private PDOStatement|bool $updateStmt;
     /**
      * @var PDOStatement|false
      */
-    private PDOStatement $insertStmt;
+    private PDOStatement|bool $insertStmt;
     /**
      * @var PDO
      */

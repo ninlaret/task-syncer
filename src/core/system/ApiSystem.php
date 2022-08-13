@@ -2,7 +2,8 @@
 
 namespace core\system;
 
-use core\Task;
+use core\exception\AppException;
+use domain\core\Task;
 
 /**
  *
@@ -13,7 +14,7 @@ abstract class ApiSystem {
      * @param string $name
      * @param int $completed
      * @return Task
-     * @throws \core\exception\AppException
+     * @throws AppException
      */
     public function makeTask(string $id, string $name, int $completed): Task
     {

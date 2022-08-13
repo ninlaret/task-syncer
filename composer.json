@@ -2,7 +2,9 @@
     "name": "ninlaret/task-syncer",
     "description": "A tiny framework to sync your tasks between task systems",
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.0",
+        "ext-pdo": "*",
+        "ext-curl": "*"
     },
     "autoload": {
         "psr-4": {

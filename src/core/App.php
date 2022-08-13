@@ -3,6 +3,7 @@
 namespace core;
 
 use core\exception\AppException;
+use core\logger\Logger;
 use core\service\SystemService;
 use PDO;
 use PDOException;
