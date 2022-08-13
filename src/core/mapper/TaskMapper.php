@@ -3,7 +3,7 @@
 namespace core\mapper;
 
 use core\App;
-use domain\core\Task;
+use core\domain\Task;
 use PDO;
 use PDOStatement;
 

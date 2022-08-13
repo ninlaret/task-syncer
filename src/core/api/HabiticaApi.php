@@ -102,7 +102,7 @@ class HabiticaApi
         }
 
         curl_close($ch);
-        App::$logger->log($response);
+
         $outputArray = json_decode($response);
 
         if (!isset($outputArray->success) || $outputArray->success === false) {
