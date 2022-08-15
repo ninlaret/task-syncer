@@ -53,13 +53,13 @@ class GitlabApi
     }
 
     /**
-     * @param $method
-     * @param $params
-     * @param $requestMethod
+     * @param string $method
+     * @param array $params
+     * @param string $requestMethod
      * @return mixed
      * @throws ApiException
      */
-    private function request($method, $params, $requestMethod = 'POST')
+    private function request(string $method, array $params, string $requestMethod = 'POST'): object
     {
         $url = App::$config['gitlabLink'] . $method . '?' . http_build_query($params);
         $ch = curl_init($url);
@@ -77,7 +77,7 @@ class GitlabApi
         $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            throw new \Exception('Gitlab curl error: ' . curl_error($ch));
+            throw new ApiException('Gitlab curl error: ' . curl_error($ch));
         }
 
         curl_close($ch);

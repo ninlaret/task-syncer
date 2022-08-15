@@ -2,10 +2,12 @@
 
 namespace core\exception;
 
+use Exception;
+
 /**
  *
  */
-class AppException extends \Exception
+class AppException extends Exception
 {
     public function __construct($message)
     {

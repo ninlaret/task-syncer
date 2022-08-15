@@ -79,12 +79,12 @@ class Installer
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_index` (`system`,`system_id`);";
 
-            $keysAutoIncramant = "ALTER TABLE `{$table}`
+            $keysAutoIncrement = "ALTER TABLE `{$table}`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;";
 
             $this->pdo->exec($sql);
             $this->pdo->exec($keysSql);
-            $this->pdo->exec($keysAutoIncramant);
+            $this->pdo->exec($keysAutoIncrement);
 
         } catch (PDOException $e) {
             throw new AppException('Can \'t install the app: ' . $e->getMessage());

@@ -82,6 +82,7 @@ class TaskMapper
     /**
      * @param int $parentId
      * @return Task|null
+     * @throws AppException
      */
     public function findParent(int $parentId): ?Task
     {
@@ -105,6 +106,7 @@ class TaskMapper
      * @param int $parentId
      * @param string $system
      * @return Task|null
+     * @throws AppException
      */
     public function findConnected(int $parentId, string $system): ?Task
     {
@@ -128,6 +130,7 @@ class TaskMapper
      * @param string $id
      * @param string $system
      * @return Task|null
+     * @throws AppException
      */
     public function find(string $id, string $system): ?Task
     {

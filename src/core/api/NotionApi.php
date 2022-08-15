@@ -88,13 +88,13 @@ class NotionApi
     }
 
     /**
-     * @param $link
-     * @param $params
-     * @param $method
+     * @param string $link
+     * @param string|bool $params
+     * @param string $method
      * @return mixed
      * @throws ApiException
      */
-    private function request(string $link, string $params, string $method = 'POST')
+    private function request(string $link, string|bool $params, string $method = 'POST'): object
     {
         $url = App::$config['notionLink'] . $link;
 

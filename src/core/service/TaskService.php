@@ -43,6 +43,7 @@ class TaskService
      * @param $id
      * @param $system
      * @return Task|null
+     * @throws AppException
      */
     public function find($id, $system): ? Task
     {
@@ -113,6 +114,7 @@ class TaskService
     /**
      * @param Task $task
      * @return void
+     * @throws AppException
      */
     private function syncParentWithDatabase(Task $task): void
     {

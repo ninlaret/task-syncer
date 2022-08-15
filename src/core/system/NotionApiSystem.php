@@ -3,6 +3,7 @@
 namespace core\system;
 
 use core\api\NotionApi;
+use core\exception\AppException;
 
 /**
  *
@@ -36,7 +37,7 @@ class NotionApiSystem extends ApiSystem
 
     /**
      * @return array
-     * @throws \core\exception\AppException
+     * @throws AppException
      */
     public function getAllTasks(): array
     {

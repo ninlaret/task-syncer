@@ -57,12 +57,12 @@ class SystemService
 
     /**
      * @return static
-     * @throws \Exception
+     * @throws AppException
      */
     public static function getInstance(): self
     {
         if (!isset(self::$instance)) {
-            throw new \Exception('Please initialize SystemService first with init() method');
+            throw new AppException('Please initialize SystemService first with init() method');
         }
 
         return self::$instance;

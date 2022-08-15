@@ -3,6 +3,7 @@
 namespace core\system;
 
 use core\api\GitlabApi;
+use core\exception\ApiException;
 
 /**
  *
@@ -46,7 +47,7 @@ class GitlabApiSystem extends ApiSystem
      * @param string|int $id
      * @param bool $completed
      * @return void
-     * @throws \core\exception\ApiException
+     * @throws ApiException
      */
     public function updateCompleted(string|int $id, bool $completed): void
     {
@@ -61,7 +62,7 @@ class GitlabApiSystem extends ApiSystem
      * @param string|int $id
      * @param string $name
      * @return void
-     * @throws \core\exception\ApiException
+     * @throws ApiException
      */
     public function updateName(string|int $id, string $name): void
     {
@@ -72,7 +73,7 @@ class GitlabApiSystem extends ApiSystem
      * @param string $name
      * @param bool $completed
      * @return string
-     * @throws \core\exception\ApiException
+     * @throws ApiException
      */
     public function sendTask(string $name, bool $completed = false): string
     {
