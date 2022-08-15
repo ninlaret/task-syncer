@@ -18,21 +18,28 @@ class CliController extends Controller
     public function syncAction(): void
     {
         $taskService = TaskService::getInstance();
+        App::$logger->log('Getting tasks from sources...');
+        $tasks = [];
 
         try {
-            App::$logger->log('Getting tasks from sources...');
             $tasks = $taskService->getAllTasksFromSources();
-
-            App::$logger->log('Found ' . count($tasks) . ' tasks. Syncing...');
-
-            foreach ($tasks as $task) {
-                $taskService->syncWithTargets($task);
-            }
-
-            App::$logger->log('Done.');
-
         } catch (AppException|ApiException $exception) {
             App::$logger->error($exception->getMessage());
         }
+
+        $message = count($tasks) ? 'Found ' . count($tasks) . ' tasks. Syncing...' : 'No tasks found';
+        App::$logger->log($message);
+        
+        foreach ($tasks as $task) {
+            try {
+                $taskService->syncWithTargets($task);
+            } catch (AppException|ApiException $exception) {
+                App::$logger->error($exception->getMessage());
+            }
+        }
+
+        App::$logger->log('Done.');
+
+
     }
 }

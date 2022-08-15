@@ -4,6 +4,7 @@ namespace core\api;
 
 use core\App;
 use core\exception\ApiException;
+use stdClass;
 
 /**
  *
@@ -25,13 +26,14 @@ class NotionApi
             $items = $this->request($link, $params);
 
             $lastItem = end($items->results);
+
             if ($params !== false) {
                 unset($items->results[0]);
             }
 
-            $params = '{
-                "start_cursor": "' . $lastItem->id . '"
-            }';
+            $paramsObject = new stdClass();
+            $paramsObject->start_cursor = $lastItem->id;
+            $params = json_encode($paramsObject);
 
             $result = array_merge($result, $items->results);
 
@@ -51,11 +53,14 @@ class NotionApi
         $value = $completed ? 'true' : false;
         $link = 'pages/' . $id;
 
-        $params = '{
-            "properties": {
-                "Done": { "checkbox": ' . $value . ' }
-            }
-        }';
+        $paramsObject = new stdClass();
+        $properties = new stdClass();
+        $valueObject = new stdClass();
+        $valueObject->checkbox = $value;
+        $properties->Done = $valueObject;
+        $paramsObject->properties = $properties;
+
+        $params = json_encode($paramsObject);
 
         $this->request($link, $params, 'PATCH');
     }
@@ -70,11 +75,14 @@ class NotionApi
     {
         $link = 'pages/' . $id;
 
-        $params = '{
-            "properties": {
-                "Name": { "title": ' . $name . ' }
-            }
-        }';
+        $paramsObject = new stdClass();
+        $properties = new stdClass();
+        $valueObject = new stdClass();
+        $valueObject->title = $name;
+        $properties->Name = $valueObject;
+        $paramsObject->properties = $properties;
+
+        $params = json_encode($paramsObject);
 
         $this->request($link, $params, 'PATCH');
     }
@@ -86,7 +94,7 @@ class NotionApi
      * @return mixed
      * @throws ApiException
      */
-    private function request($link, $params, $method = 'POST')
+    private function request(string $link, string $params, string $method = 'POST')
     {
         $url = App::$config['notionLink'] . $link;
 

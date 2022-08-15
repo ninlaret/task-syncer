@@ -70,7 +70,7 @@ class HabiticaApi
      * @return mixed
      * @throws ApiException
      */
-    private function request($method, array|bool $params = false, string $requestMethod = 'POST'): object
+    private function request($method, string|bool $params = false, string $requestMethod = 'POST'): object
     {
         $url = App::$config['habiticaLink'] . $method;
         $ch = curl_init($url);

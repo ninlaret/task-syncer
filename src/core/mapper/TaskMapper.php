@@ -4,6 +4,7 @@ namespace core\mapper;
 
 use core\App;
 use core\domain\Task;
+use core\exception\AppException;
 use PDO;
 use PDOStatement;
 
@@ -167,7 +168,7 @@ class TaskMapper
     /**
      * @param array $raw
      * @return Task
-     * @throws exception\AppException
+     * @throws AppException
      */
     protected function createObject(array $raw): Task
     {
