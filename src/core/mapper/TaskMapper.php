@@ -42,12 +42,14 @@ class TaskMapper
      */
     public function __construct()
     {
+        $table = App::$config['table'];
         $this->pdo = App::$db;
-        $this->selectStmt = $this->pdo->prepare('SELECT * FROM system_task WHERE `system_id` = ? AND `system` = ?');
-        $this->selectConnectedStmt = $this->pdo->prepare('SELECT * FROM system_task WHERE `parent_id` = ? AND `system` = ?');
-        $this->selectParentStmt = $this->pdo->prepare('SELECT * FROM system_task WHERE `id` = ?');
-        $this->updateStmt = $this->pdo->prepare('UPDATE system_task SET `name` = ?, `is_completed` = ?, `parent_id` = ? WHERE `system` = ? AND `system_id` = ?');
-        $this->insertStmt = $this->pdo->prepare('INSERT INTO system_task (`name`, `is_completed`, `system`, `system_id`, `parent_id`) VALUES (?, ?, ?, ?, ?)');
+
+        $this->selectStmt = $this->pdo->prepare("SELECT * FROM {$table} WHERE `system_id` = ? AND `system` = ?");
+        $this->selectConnectedStmt = $this->pdo->prepare("SELECT * FROM {$table} WHERE `parent_id` = ? AND `system` = ?");
+        $this->selectParentStmt = $this->pdo->prepare("SELECT * FROM {$table} WHERE `id` = ?");
+        $this->updateStmt = $this->pdo->prepare("UPDATE {$table} SET `name` = ?, `is_completed` = ?, `parent_id` = ? WHERE `system` = ? AND `system_id` = ?");
+        $this->insertStmt = $this->pdo->prepare("INSERT INTO {$table} (`name`, `is_completed`, `system`, `system_id`, `parent_id`) VALUES (?, ?, ?, ?, ?)");
     }
 
     /**

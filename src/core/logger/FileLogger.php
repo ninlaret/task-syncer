@@ -2,6 +2,8 @@
 
 namespace core\logger;
 
+use core\App;
+
 /**
  *
  */
@@ -14,8 +16,8 @@ class FileLogger extends Logger
     public function log($message): void
     {
         if ($this->showLog) {
-            error_log($message, 3, ROOT_PATH . '/debug.log');
-            error_log("\n", 3, ROOT_PATH . '/debug.log');
+            error_log($message, 3, App::$config['logPath']);
+            error_log("\n", 3, App::$config['logPath']);
         }
     }
 
@@ -25,7 +27,7 @@ class FileLogger extends Logger
      */
     public function error($message): void
     {
-        error_log($message, 3, ROOT_PATH . '/debug.log');
-        error_log("\n", 3, ROOT_PATH . '/debug.log');
+        error_log($message, 3, App::$config['logPath']);
+        error_log("\n", 3, App::$config['logPath']);
     }
 }

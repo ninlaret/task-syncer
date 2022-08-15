@@ -4,6 +4,7 @@ namespace core\api;
 
 use core\App;
 use core\exception\ApiException;
+use stdClass;
 
 /**
  *
@@ -11,13 +12,13 @@ use core\exception\ApiException;
 class HabiticaApi
 {
     /**
-     * @param $name
+     * @param string $name
      * @return string
      * @throws ApiException
      */
-    public function send($name): string
+    public function send(string $name): string
     {
-        $params = new \stdClass();
+        $params = new stdClass();
         $params->text = addslashes($name);
         $params->type = 'todo';
 
@@ -46,7 +47,7 @@ class HabiticaApi
      */
     public function updateName(string $id, string $name): void
     {
-        $params = new \stdClass();
+        $params = new stdClass();
         $params->text = addslashes($name);
 
         $this->request('tasks/' . $id, json_encode($params), 'PUT');
@@ -54,22 +55,22 @@ class HabiticaApi
 
     /**
      * @param $id
-     * @return mixed
+     * @return void
      * @throws ApiException
      */
-    public function delete($id)
+    public function delete($id): void
     {
-        return $this->request('tasks/' . $id, false, 'DELETE');
+        $this->request('tasks/' . $id, false, 'DELETE');
     }
 
     /**
      * @param $method
-     * @param $params
-     * @param $requestMethod
+     * @param array|bool $params
+     * @param string $requestMethod
      * @return mixed
      * @throws ApiException
      */
-    private function request($method, $params = false, $requestMethod = 'POST')
+    private function request($method, array|bool $params = false, string $requestMethod = 'POST'): object
     {
         $url = App::$config['habiticaLink'] . $method;
         $ch = curl_init($url);
@@ -113,5 +114,3 @@ class HabiticaApi
         return $outputArray;
     }
 }
-
-?>

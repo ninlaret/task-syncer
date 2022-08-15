@@ -2,9 +2,11 @@
 
 namespace core;
 
+use core\config\Config;
 use core\exception\AppException;
 use core\logger\Logger;
 use core\service\SystemService;
+use core\installer\Installer;
 use PDO;
 use PDOException;
 
@@ -31,21 +33,20 @@ class App
     public static Logger $logger;
 
     /**
-     * @param $config
-     * @param $mode
+     * @param array $config
+     * @param array $params
+     * @param string $mode
      * @return void
      */
-    public static function init($config, $mode): void
+    public static function init(array $config, array $params, string $mode): void
     {
-        self::$config = self::makeConfig($config);
+        self::$config = self::makeConfig($config, $params);
         self::$logger = self::getLogger(self::$config['logger']);
 
         self::$logger->log('Initializing...');
 
         try {
-            self::$db = self::setDb();
-            self::$assembler = new SystemAssembler(self::$config['apiRealisations']);
-            SystemService::init($config['syncParams']['target']);
+            self::initParameters(self::$config);
 
         } catch (AppException $exception) {
             self::$logger->error($exception->getMessage());
@@ -63,15 +64,36 @@ class App
     }
 
     /**
-     * @param $config
+     * @param array $config
+     * @return void
+     * @throws AppException
+     */
+    private static function initParameters(array $config): void
+    {
+        self::$db = self::setDb();
+
+        $installer = Installer::getInstance();
+        if (!$installer->checkInstalled(self::$config['table'])) {
+
+            self::$logger->log('Installing db table...');
+            $installer->install(self::$config['table']);
+            self::$logger->log('Done. Don\'t forget to edit cli and web configs in the /config directory and fill your api keys in params file');
+        }
+
+        self::$assembler = new SystemAssembler($config['apiRealisations']);
+        SystemService::init($config['syncParams']['target']);
+    }
+
+    /**
+     * @param array $config
+     * @param array $params
      * @return array
      */
-    private static function makeConfig($config): array
+    private static function makeConfig(array $config, array $params): array
     {
-        $appConfig = require(ROOT_PATH . 'config/app.php');
-        $appLocalConfig = require(ROOT_PATH . 'config/app.local.php');
+        $appConfig = Config::getDefaultConfig();
 
-        return $config + $appLocalConfig + $appConfig;
+        return $config + $params + $appConfig;
     }
 
     /**
@@ -84,10 +106,10 @@ class App
     }
 
     /**
-     * @param $mode
+     * @param string $mode
      * @return object
      */
-    private static function getController($mode): object
+    private static function getController(string $mode): object
     {
         $controllerClass = match ($mode) {
             'Cli' => 'core\controller\CliController',
@@ -121,10 +143,10 @@ class App
     }
 
     /**
-     * @param $logger
+     * @param string $logger
      * @return Logger
      */
-    private static function getLogger($logger): Logger
+    private static function getLogger(string $logger): Logger
     {
         $class = class_exists($logger) ? $logger : self::$config['defaultLogger'];
 

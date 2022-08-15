@@ -11,11 +11,11 @@ use core\exception\ApiException;
 class NotionApi
 {
     /**
-     * @param $databaseId
+     * @param string $databaseId
      * @return array
      * @throws ApiException
      */
-    public function retrieve($databaseId): array
+    public function retrieve(string $databaseId): array
     {
         $result = array();
         $params = false;
