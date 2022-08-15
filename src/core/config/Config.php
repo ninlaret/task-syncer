@@ -13,7 +13,7 @@ class Config
 
             'table' => 'task',
 
-            'logPath' => '../../../../debug.log',
+            'logPath' => dirname(__FILE__) . '/../../../../../../debug.log',
             'showLogs' => true,
             'logger' => 'core\EchoLogger',
             'defaultLogger' => 'core\EchoLogger',
