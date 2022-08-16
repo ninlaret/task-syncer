@@ -1,7 +1,6 @@
 {
     "name": "ninlaret/task-syncer",
     "description": "A tiny framework to sync your tasks between task systems",
-    "version": "1.0.0",
     "require": {
         "php": ">=8.0",
         "ext-pdo": "*",
