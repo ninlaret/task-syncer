@@ -2,8 +2,14 @@
 
 namespace core\config;
 
+/**
+ *
+ */
 class Config
 {
+    /**
+     * @return array
+     */
     static public function getDefaultConfig(): array
     {
         return [
@@ -24,9 +30,7 @@ class Config
                 'gitlab' => 'core\system\GitlabApiSystem'
             ],
 
-            'syncParams' => [
-                'target' => []
-            ]
+            'syncParams' => []
         ];
     }
 }

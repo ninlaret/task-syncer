@@ -7,6 +7,10 @@ namespace core\logger;
  */
 class EchoLogger extends Logger
 {
+    function __construct() {
+        parent::__construct();
+    }
+
     /**
      * @param $message
      * @return void

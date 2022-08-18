@@ -6,7 +6,6 @@ use core\App;
 use core\exception\AppException;
 use PDO;
 use PDOException;
-use PDOStatement;
 
 /**
  *
@@ -14,29 +13,13 @@ use PDOStatement;
 class Installer
 {
     /**
-     * @var self
-     */
-    private static self $instance;
-    /**
      * @var PDO
      */
     private PDO $pdo;
-    /**
-     * @var PDOStatement
-     */
-    private PDOStatement $checkStmt;
 
-    /**
-     * @return static
-     */
-    public static function getInstance(): self
+    public function __construct()
     {
-        if (!isset(self::$instance)) {
-            self::$instance = new self();
-            self::$instance->pdo = App::$db;
-        }
-
-        return self::$instance;
+        $this->pdo = App::$db;
     }
 
     /**
@@ -48,7 +31,7 @@ class Installer
         try {
             $query = $this->pdo->prepare("SELECT 1 FROM {$table} LIMIT 1");
             $result = $query->execute();
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             return false;
         }
 

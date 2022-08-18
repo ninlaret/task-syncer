@@ -48,7 +48,7 @@ abstract class ApiSystem {
     /**
      * @param string $name
      * @param bool $completed
-     * @return string|int
+     * @return Task
      */
-    abstract public function sendTask(string $name, bool $completed = false): string|int;
+    abstract public function create(string $name, bool $completed = false): Task;
 }

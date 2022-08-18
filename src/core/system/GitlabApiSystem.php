@@ -3,7 +3,9 @@
 namespace core\system;
 
 use core\api\GitlabApi;
+use core\domain\Task;
 use core\exception\ApiException;
+use core\exception\AppException;
 
 /**
  *
@@ -72,10 +74,10 @@ class GitlabApiSystem extends ApiSystem
     /**
      * @param string $name
      * @param bool $completed
-     * @return string
-     * @throws ApiException
+     * @return Task
+     * @throws ApiException|AppException
      */
-    public function sendTask(string $name, bool $completed = false): string
+    public function create(string $name, bool $completed = false): Task
     {
         $id = $this->getApi()->send($name);
 
@@ -83,6 +85,6 @@ class GitlabApiSystem extends ApiSystem
             $this->updateCompleted($id, $completed);
         }
 
-        return $id;
+        return $this->makeTask($id, $name, $completed);
     }
 }

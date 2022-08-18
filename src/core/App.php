@@ -5,7 +5,6 @@ namespace core;
 use core\config\Config;
 use core\exception\AppException;
 use core\logger\Logger;
-use core\service\SystemService;
 use core\installer\Installer;
 use PDO;
 use PDOException;
@@ -24,76 +23,71 @@ class App
      */
     public static PDO $db;
     /**
-     * @var SystemAssembler
-     */
-    public static SystemAssembler $assembler;
-    /**
      * @var Logger
      */
     public static Logger $logger;
 
     /**
      * @param array $config
-     * @param array $params
      * @param string $mode
      * @return void
      */
-    public static function init(array $config, array $params, string $mode): void
+    public static function init(array $config, string $mode): void
     {
-        self::$config = self::makeConfig($config, $params);
+        self::$config = self::makeConfig($config);
         self::$logger = self::getLogger(self::$config['logger']);
 
         self::$logger->log('Initializing...');
 
         try {
-            self::initParameters(self::$config);
+            self::$db = self::setDb();
+            self::initTable(self::$config['table']);
 
         } catch (AppException $exception) {
             self::$logger->error($exception->getMessage());
             return;
         }
 
-        $action = (http_response_code() !== FALSE) ? self::parseWebAction() :
-            ($_SERVER['argv'][1] ?? false);
-
-        if ($action) {
+        if ($action = self::getAction()) {
             echo self::getController($mode)->run($action);
+            self::$logger->log('Done.');
         } else {
             self::$logger->error('No action');
         }
     }
 
+    private static function getAction()
+    {
+        return (http_response_code() !== FALSE) ? self::parseWebAction() :
+            ($_SERVER['argv'][1] ?? false);
+    }
+
     /**
-     * @param array $config
+     * @param string $table
      * @return void
      * @throws AppException
      */
-    private static function initParameters(array $config): void
+    private static function initTable(string $table): void
     {
-        self::$db = self::setDb();
-
-        $installer = Installer::getInstance();
-        if (!$installer->checkInstalled(self::$config['table'])) {
-
+        $installer = new Installer();
+        if (!$installer->checkInstalled($table)) {
             self::$logger->log('Installing db table...');
-            $installer->install(self::$config['table']);
+
+            $installer->install($table);
+
             self::$logger->log('Done. Don\'t forget to edit cli and web configs in the /config directory and fill your api keys in params file');
         }
-
-        self::$assembler = new SystemAssembler($config['apiRealisations']);
-        SystemService::init($config['syncParams']['target']);
     }
 
     /**
      * @param array $config
-     * @param array $params
      * @return array
      */
-    private static function makeConfig(array $config, array $params): array
+    private static function makeConfig(array $config): array
     {
         $appConfig = Config::getDefaultConfig();
 
-        return $config + $params + $appConfig;
+        return $config + $appConfig;
     }
 
     /**
@@ -150,6 +144,6 @@ class App
     {
         $class = class_exists($logger) ? $logger : self::$config['defaultLogger'];
 
-        return $class::getInstance();
+        return new $class();
     }
 }

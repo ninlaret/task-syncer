@@ -8,10 +8,10 @@ namespace core\controller;
 class Controller
 {
     /**
-     * @param $action
+     * @param string $action
      * @return string
      */
-    public function run($action)
+    public function run(string $action): mixed
     {
         $methodName = $action . 'Action';
         if (method_exists(get_class($this), $methodName)) {

@@ -13,30 +13,23 @@ use core\system\ApiSystem;
 class TaskService
 {
     /**
-     * @var self
-     */
-    private static self $instance;
-    /**
      * @var TaskMapper
      */
     private TaskMapper $mapper;
+    /**
+     * @var SystemService
+     */
+    private SystemService $service;
 
     /**
+     * @param array $targets
+     * @param array $realizations
      * @return void
      */
-    private function __constructor(): void {}
-
-    /**
-     * @return static
-     */
-    public static function getInstance(): self
+    public function __construct(array $targets, array $realizations)
     {
-        if (!isset(self::$instance)) {
-            self::$instance = new self();
-            self::$instance->mapper = new TaskMapper();
-        }
-
-        return self::$instance;
+        $this->mapper = new TaskMapper();
+        $this->service = new SystemService($targets, $realizations);
     }
 
     /**
@@ -56,10 +49,9 @@ class TaskService
      */
     public function getAllTasksFromSources(): array
     {
-        $service = SystemService::getInstance();
         $tasks = array();
 
-        foreach ($service->getSourceSystems() as $system) {
+        foreach ($this->service->getSourceSystems() as $system) {
             $tasks = array_merge($tasks, $system->getAllTasks());
         }
 
@@ -78,8 +70,7 @@ class TaskService
         $task = $this->mapper->findConnected($parentTask->getParentId(), $system->getName());
 
         if (!$task) {
-            $id = $system->sendTask($parentTask->getName(), $parentTask->getCompleted());
-            $task = new Task(0, $id, $parentTask->getName(), $parentTask->getCompleted(), $system->getName());
+            $task = $system->create($parentTask->getName(), $parentTask->getCompleted());
             $this->mapper->insert($task, $parentTask->getId());
         } else {
 
@@ -104,9 +95,7 @@ class TaskService
      */
     public function syncWithTargets(Task $task): void
     {
-        $service = SystemService::getInstance();
-
-        foreach ($service->getTargetSystems($task->getSystem()) as $system) {
+        foreach ($this->service->getTargetSystems($task->getSystem()) as $system) {
             $this->syncWithSystem($task, $system);
         }
     }

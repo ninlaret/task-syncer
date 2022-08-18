@@ -3,6 +3,7 @@
 namespace core\system;
 
 use core\api\NotionApi;
+use core\domain\Task;
 use core\exception\AppException;
 
 /**
@@ -76,9 +77,10 @@ class NotionApiSystem extends ApiSystem
     /**
      * @param string $name
      * @param bool $completed
-     * @return int
+     * @return Task
+     * @throws AppException
      */
-    public function sendTask(string $name, bool $completed = false): int
+    public function create(string $name, bool $completed = false): Task
     {
         $id = time() . rand(1, 9999);
 
@@ -86,6 +88,6 @@ class NotionApiSystem extends ApiSystem
             $this->updateCompleted($id, $completed);
         }
 
-        return $id;
+        return $this->makeTask($id, $name, $completed);
     }
 }

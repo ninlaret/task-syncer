@@ -17,7 +17,7 @@ class CliController extends Controller
      */
     public function syncAction(): void
     {
-        $taskService = TaskService::getInstance();
+        $taskService = new TaskService(App::$config['syncParams'], App::$config['apiRealisations']);
         App::$logger->log('Getting tasks from sources...');
         $tasks = [];
 
@@ -29,7 +29,7 @@ class CliController extends Controller
 
         $message = count($tasks) ? 'Found ' . count($tasks) . ' tasks. Syncing...' : 'No tasks found';
         App::$logger->log($message);
-        
+
         foreach ($tasks as $task) {
             try {
                 $taskService->syncWithTargets($task);
@@ -37,9 +37,5 @@ class CliController extends Controller
                 App::$logger->error($exception->getMessage());
             }
         }
-
-        App::$logger->log('Done.');
-
-
     }
 }

@@ -10,10 +10,6 @@ use core\App;
 abstract class Logger
 {
     /**
-     * @var self
-     */
-    protected static Logger $instance;
-    /**
      * @var bool
      */
     protected bool $showLog;
@@ -21,21 +17,9 @@ abstract class Logger
     /**
      * @return void
      */
-    private function __constructor(): void
+    public function __construct()
     {
-    }
-
-    /**
-     * @return static
-     */
-    public static function getInstance(): self
-    {
-        if (!isset(self::$instance)) {
-            self::$instance = new static();
-            self::$instance->showLog = App::$config['showLogs'];
-        }
-
-        return self::$instance;
+        $this->showLog = App::$config['showLogs'];
     }
 
     /**

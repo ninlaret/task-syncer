@@ -4,16 +4,13 @@ namespace core\service;
 
 use core\exception\AppException;
 use core\App;
+use core\SystemAssembler;
 
 /**
  *
  */
 class SystemService
 {
-    /**
-     * @var SystemService
-     */
-    private static self $instance;
     /**
      * @var array
      */
@@ -27,45 +24,21 @@ class SystemService
      */
     private array $systemInstances;
     /**
-     * @var array
+     * @var SystemAssembler
      */
-    private array $systemNames;
+    private SystemAssembler $assembler;
 
     /**
+     * @param array $targets
+     * @param array $realizations
      * @return void
-     */
-    private function __constructor(): void
-    {
-    }
-
-    /**
-     * @param array $config
-     * @return static
      * @throws AppException
      */
-    public static function init(array $config): self
+    public function __construct(array $targets, array $realizations)
     {
-        if (!isset(self::$instance)) {
-            self::$instance = new self();
-            self::$instance->loadSourceSystems(array_keys($config));
-            self::$instance->loadTargetSystems($config);
-            self::$instance->systemNames = $config;
-        }
-
-        return self::$instance;
-    }
-
-    /**
-     * @return static
-     * @throws AppException
-     */
-    public static function getInstance(): self
-    {
-        if (!isset(self::$instance)) {
-            throw new AppException('Please initialize SystemService first with init() method');
-        }
-
-        return self::$instance;
+        $this->loadSourceSystems(array_keys($targets));
+        $this->loadTargetSystems($targets);
+        $this->assembler = new SystemAssembler($realizations);
     }
 
     /**
@@ -103,18 +76,9 @@ class SystemService
      * @return object
      * @throws AppException
      */
-    public function getSystem(string $systemName): object
+    public function getSystemObject(string $systemName): object
     {
         return $this->loadSingleSystem($systemName);
-    }
-
-    /**
-     * @param string $systemName
-     * @return array
-     */
-    public function getTargetSystemNames(string $systemName): array
-    {
-        return $this->systemNames[$systemName] ?? array();
     }
 
     /**
@@ -156,7 +120,7 @@ class SystemService
         }
 
         if (!isset($this->systemInstances[$system])) {
-            $this->systemInstances[$system] = App::$assembler->getComponent($system);
+            $this->systemInstances[$system] = $this->assembler->getComponent($system);
         }
 
         return $this->systemInstances[$system];

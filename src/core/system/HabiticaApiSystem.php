@@ -3,6 +3,8 @@
 namespace core\system;
 
 use core\api\HabiticaApi;
+use core\domain\Task;
+use core\exception\AppException;
 
 /**
  *
@@ -60,9 +62,10 @@ class HabiticaApiSystem extends ApiSystem
     /**
      * @param string $name
      * @param bool $completed
-     * @return string|int
+     * @return Task
+     * @throws AppException
      */
-    public function sendTask(string $name, bool $completed = false): string|int
+    public function create(string $name, bool $completed = false): Task
     {
         $id = $this->getApi()->send($name);
 
@@ -70,6 +73,6 @@ class HabiticaApiSystem extends ApiSystem
             $this->updateCompleted($id, $completed);
         }
 
-        return $id;
+        return $this->makeTask($id, $name, $completed);
     }
 }

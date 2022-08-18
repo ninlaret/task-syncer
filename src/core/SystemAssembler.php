@@ -3,6 +3,7 @@
 namespace core;
 
 use core\exception\AppException;
+use ReflectionClass;
 
 /**
  *
@@ -52,7 +53,7 @@ class SystemAssembler
             }
 
             $this->components[$key] = function () use ($realization) {
-                $instance = new \ReflectionClass ($realization);
+                $instance = new ReflectionClass ($realization);
                 return $instance->newInstance();
             };
         }

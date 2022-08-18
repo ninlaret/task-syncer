@@ -80,77 +80,6 @@ class TaskMapper
     }
 
     /**
-     * @param int $parentId
-     * @return Task|null
-     * @throws AppException
-     */
-    public function findParent(int $parentId): ?Task
-    {
-        $values = [$parentId];
-        $this->selectParentStmt->execute($values);
-        $row = $this->selectParentStmt->fetch();
-        $this->selectParentStmt->closeCursor();
-
-        if (!is_array($row)) {
-            return null;
-        }
-
-        if (!isset($row['id'])) {
-            return null;
-        }
-
-        return $this->createObject($row);
-    }
-
-    /**
-     * @param int $parentId
-     * @param string $system
-     * @return Task|null
-     * @throws AppException
-     */
-    public function findConnected(int $parentId, string $system): ?Task
-    {
-        $values = [$parentId, $system];
-        $this->selectConnectedStmt->execute($values);
-        $row = $this->selectConnectedStmt->fetch();
-        $this->selectConnectedStmt->closeCursor();
-
-        if (!is_array($row)) {
-            return null;
-        }
-
-        if (!isset($row['id'])) {
-            return null;
-        }
-
-        return $this->createObject($row);
-    }
-
-    /**
-     * @param string $id
-     * @param string $system
-     * @return Task|null
-     * @throws AppException
-     */
-    public function find(string $id, string $system): ?Task
-    {
-        $values = [$id, $system];
-        $this->selectStmt->execute($values);
-        $row = $this->selectStmt->fetch();
-        $this->selectStmt->closeCursor();
-
-        if (!is_array($row)) {
-            return null;
-        }
-
-        if (!isset($row['id'])) {
-            return null;
-        }
-
-        return $this->createObject($row);
-    }
-
-    /**
      * @param Task $task
      * @return void
      */
@@ -166,6 +95,61 @@ class TaskMapper
 
         $this->updateStmt->execute($values);
         $task->setUpdated();
+    }
+
+    /**
+     * @param int $id
+     * @return Task|null
+     * @throws AppException
+     */
+    public function findParent(int $id): ?Task
+    {
+        return $this->performFind([$id], $this->selectParentStmt);
+    }
+
+    /**
+     * @param int $parentId
+     * @param string $system
+     * @return Task|null
+     * @throws AppException
+     */
+    public function findConnected(int $parentId, string $system): ?Task
+    {
+        return $this->performFind([$parentId, $system], $this->selectConnectedStmt);
+    }
+
+    /**
+     * @param string $id
+     * @param string $system
+     * @return Task|null
+     * @throws AppException
+     */
+    public function find(string $id, string $system): ?Task
+    {
+        return $this->performFind([$id, $system], $this->selectStmt);
+    }
+
+    /**
+     * @param array $params
+     * @param PDOStatement $statement
+     * @return Task|null
+     * @throws AppException
+     */
+    private function performFind(array $params, PDOStatement $statement): ?Task
+    {
+        $statement->execute($params);
+        $row = $statement->fetch();
+        $statement->closeCursor();
+
+        if (!is_array($row)) {
+            return null;
+        }
+
+        if (!isset($row['id'])) {
+            return null;
+        }
+
+        return $this->createObject($row);
     }
 
     /**
