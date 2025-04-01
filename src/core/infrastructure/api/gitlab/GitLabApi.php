@@ -30,7 +30,7 @@ class GitLabApi implements TaskApiUpdateInterface, TaskApiFetchInterface
                     'query' => ['page' => $page, 'per_page' => 100]
                 ]);
 
-                $tasks = json_decode($response->getBody()->getContents(), true);
+                $tasks = json_decode($response->getBody()->getContents());
                 $allTasks = array_merge($allTasks, $tasks);
 
                 $nextPage = $response->getHeader('X-Next-Page')[0] ?? null;

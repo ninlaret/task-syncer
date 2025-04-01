@@ -46,7 +46,14 @@ return [
     ],
 
     DoctrineConfig::class => function ($container) {
-        $cache = new FilesystemAdapter('', 0, __DIR__ . '/cache');
+        $basePath = $container->get('base_path');
+
+        $cacheDir = $basePath . '/var/cache';
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0777, true);
+        }
+
+        $cache = new FilesystemAdapter('', 0, $cacheDir);
 
         return new DoctrineConfig(
             $container->get('database')['dbname'],

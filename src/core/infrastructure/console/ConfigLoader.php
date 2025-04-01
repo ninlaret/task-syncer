@@ -7,14 +7,18 @@ use DI\ContainerBuilder;
 
 class ConfigLoader
 {
-    public static function buildContainer(?string $paramsPath = null, ?string $systemsPath = null): Container
+    public static function buildContainer(string $basePath, ?string $paramsPath = null, ?string $systemsPath = null): Container
     {
         $containerBuilder = new ContainerBuilder();
 
         $containerBuilder->addDefinitions(self::getLibraryConfigPath());
 
-        $containerBuilder->addDefinitions(self::getUserConfigPath($paramsPath, 'params.php'));
-        $containerBuilder->addDefinitions(self::getUserConfigPath($systemsPath, 'systems.php'));
+        $containerBuilder->addDefinitions([
+            'base_path' => $basePath,
+        ]);
+
+        $containerBuilder->addDefinitions(self::getUserConfigPath($basePath, $paramsPath, 'params.php'));
+        $containerBuilder->addDefinitions(self::getUserConfigPath($basePath, $systemsPath, 'systems.php'));
 
         return $containerBuilder->build();
     }
@@ -24,18 +28,18 @@ class ConfigLoader
         return __DIR__ . '/../config/di.php';
     }
 
-    private static function getUserConfigPath(?string $customPath, string $defaultFilename): string
+    private static function getUserConfigPath(string $basePath, ?string $customPath, string $defaultFilename): string
     {
         if ($customPath !== null && file_exists($customPath)) {
             return $customPath;
         }
 
-        $defaultPath = dirname(__DIR__, 4) . '/config/' . $defaultFilename;
+        $defaultPath = $basePath . '/config/' . $defaultFilename;
 
         if (file_exists($defaultPath)) {
             return $defaultPath;
         }
 
-        throw new \RuntimeException("Config dile not found: {$defaultFilename}");
+        throw new \RuntimeException("Config file not found: {$defaultFilename}");
     }
 }

@@ -35,10 +35,10 @@ class TaskSynchronizer
             $externalTasks = $this->externalTaskFetchers[$sourceSystem]->fetchTasks();
 
             /** @var ExternalTaskDTO[] $dtos */
-            $dtos = array_map(
+            $dtos = array_values(array_filter(array_map(
                 fn($externalTask) => $this->taskMappers[$sourceSystem]->mapExternalToDTO($externalTask),
                 $externalTasks
-            );
+            )));
 
             foreach ($dtos as $dto) {
                 $sourceTask = $this->taskService->getOrCreateSource($dto);
