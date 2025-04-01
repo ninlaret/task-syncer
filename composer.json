@@ -1,14 +1,31 @@
 {
-    "name": "ninlaret/task-syncer",
-    "description": "A tiny framework to sync your tasks between task systems",
-    "require": {
-        "php": ">=8.0",
-        "ext-pdo": "*",
-        "ext-curl": "*"
-    },
+    "name": "ninlaret/task_syncer",
+    "type": "library",
     "autoload": {
         "psr-4": {
             "core\\": "src/core/"
         }
+    },
+    "authors": [
+        {
+            "name": "ninlaret"
+        }
+    ],
+    "require": {
+        "php": ">=8.3",
+        "doctrine/orm": "^3.3",
+        "symfony/console": "^7.2",
+        "php-di/php-di": "^7.0",
+        "guzzlehttp/guzzle": "^7.9",
+        "symfony/http-foundation": "^7.2",
+        "symfony/cache": "^7.2"
+    },
+    "scripts": {
+        "sync-tasks": "php bin/console sync",
+        "init": "php bin/console init"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.6",
+        "phpunit/phpunit": "^9"
     }
 }
